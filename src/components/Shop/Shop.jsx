@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import {
   addToDb,
   deleteShoppingCart,
@@ -12,7 +12,21 @@ import "./Shop.css";
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const { count } = useLoaderData();
+  const itemsPerPage = 10;
+  const numberOfPages = Math.ceil(count / itemsPerPage);
 
+  // const pages = [];
+  // for (let i = 0; i < numberOfPages; i++) {
+  //   pages.push(i);
+  // }
+  const pages = [...Array(numberOfPages).keys()];
+  /***
+   * 1 : get the total number of products
+   * 2: number of items per page dynamic
+   *
+   *
+   * */
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BASE_URL}/products`)
       .then((res) => res.json())
@@ -81,6 +95,11 @@ const Shop = () => {
             <button className="btn-proceed">Review Order</button>
           </Link>
         </Cart>
+      </div>
+      <div className="pagination">
+        {pages.map((page) => (
+          <button key={page}>{page}</button>
+        ))}
       </div>
     </div>
   );
